@@ -1,7 +1,17 @@
 import React from 'react';
 
+import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
+
 import logo from '../img/logo.svg';
 import styled from 'styled-components';
+
+//local query
+const IS_LOGGED_IN = gql`
+  {
+    isLoggedIn @client
+  }
+`;
 
 const HeaderBar = styled.header`
   width: 100%;
@@ -21,11 +31,28 @@ const LogoText = styled.h1`
   display: inline;
 `;
 
-const Header = () => {
+const UserState = styled.div`
+  margin-left: auto;
+`;
+
+const Header = (props) => {
+  //query hook for user logged in state
+  const { data } = useQuery(IS_LOGGED_IN);
+
   return (
     <HeaderBar>
       <img src={logo} alt="Notedly logo" height="40" />
       <LogoText>Notedly</LogoText>
+      {/* <UserState>
+        {data.IS_LOGGED_IN ? (
+          <p>Log Out</p>
+        ) : (
+          <p>
+            <Link to={'/signin'}>Sign In</Link> or{' '}
+            <Link to={'/signup'}>Sign Up</Link>
+          </p>
+        )}
+      </UserState> */}
     </HeaderBar>
   );
 };

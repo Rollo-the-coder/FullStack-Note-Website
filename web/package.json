@@ -9,10 +9,11 @@
     "cy:open": "cypress open"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.9",
+    "@apollo/client": "^3.5.10",
     "@types/react": "^17.0.39",
-    "apollo": "^2.33.9",
+    "apollo-client": "^2.6.10",
     "apollo-link-context": "^1.0.20",
+    "apollo-server-errors": "^3.3.1",
     "date-fns": "^2.28.0",
     "graphql": "^15.8.0",
     "normalize.css": "^8.0.1",
