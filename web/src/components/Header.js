@@ -1,17 +1,12 @@
 import React from 'react';
 
 import { useQuery, gql } from '@apollo/client';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../img/logo.svg';
 import styled from 'styled-components';
 
-//local query
-const IS_LOGGED_IN = gql`
-  {
-    isLoggedIn @client
-  }
-`;
+import ButtonAsLink from './ButtonAsLink';
 
 const HeaderBar = styled.header`
   width: 100%;
@@ -36,25 +31,57 @@ const UserState = styled.div`
 `;
 
 const Header = (props) => {
+  const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
+    }
+  `;
+
   //query hook for user logged in state
-  const { data } = useQuery(IS_LOGGED_IN);
+  const { loading, data: { isLoggedIn } = {}, client } = useQuery(IS_LOGGED_IN);
+  console.log(isLoggedIn, client, loading);
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <HeaderBar>
       <img src={logo} alt="Notedly logo" height="40" />
       <LogoText>Notedly</LogoText>
-      {/* <UserState>
-        {data.IS_LOGGED_IN ? (
-          <p>Log Out</p>
+      <UserState>
+        {isLoggedIn ? (
+          <ButtonAsLink
+            onClick={() => {
+              //remove the token for logout
+              localStorage.removeItem('token');
+              //console.log('tea time');
+              //clear the applications cache
+              client.resetStore();
+              //console.log('reset time');
+              //update local state this is most likely where the error is
+              client.writeQuery({
+                query: IS_LOGGED_IN,
+                data: {
+                  isLoggedIn: false,
+                },
+              });
+              //console.log('logout time');
+              //redirect the user to the home page
+              props.history.push('/');
+              console.log('last time');
+            }}
+          >
+            Log Out
+          </ButtonAsLink>
         ) : (
           <p>
             <Link to={'/signin'}>Sign In</Link> or{' '}
             <Link to={'/signup'}>Sign Up</Link>
           </p>
         )}
-      </UserState> */}
+      </UserState>
     </HeaderBar>
   );
 };
 
-export default Header;
+export default withRouter(Header);
