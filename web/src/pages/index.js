@@ -10,6 +10,8 @@ import Favorites from './favorites';
 import NotePage from './note';
 import SignUp from './signup';
 import SignIn from './signin';
+import NewNote from './new';
+import EditNote from './edit';
 
 //to check for user auth to goto to pages if logged in
 const IS_LOGGED_IN = gql`
@@ -28,6 +30,8 @@ const Pages = (props) => {
         <Route path="/note/:id" component={NotePage} />
         <Route path="/signup" component={SignUp} />
         <Route path="/signin" component={SignIn} />
+        <PrivateRoute path="/new" component={NewNote} />
+        <PrivateRoute path="/edit/:id" component={EditNote} />
       </Layout>
     </Router>
   );
